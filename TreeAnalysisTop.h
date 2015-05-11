@@ -97,6 +97,32 @@ enum FakeSource{
   WrongSign,
   gNFAKESOURCE
 };
+
+enum gNLOWeight{
+  muR1muF1,
+  muR1muF2,
+  muR1muF05,
+  muR2muF1,
+  muR2muF2,
+  muR2muF05,
+  muR05muF1,
+  muR05muF2,
+  muR05muF05,
+  gNWEIGHT
+};
+
+TString WeiName[gNWEIGHT] = {
+  "muR1muF1",
+  "muR1muF2",
+  "muR1muF05",
+  "muR2muF1",
+  "muR2muF2",
+  "muR2muF05",
+  "muR05muF1",
+  "muR05muF2",
+  "muR05muF05"
+};
+
 class lepton{
  public:
   lepton(){}
@@ -327,8 +353,9 @@ class TreeAnalysisTop: public PAFAnalysis {
   //++ Yields
   TH1F* fHDummy;
   TH1F* hWeight;
-  TH1F* fHyields  [gNCHANNELS][gNSYST];
-  TH1F* fHSSyields[gNCHANNELS][gNSYST];
+  TH1F* fHyields     [gNCHANNELS][gNSYST];
+  TH1F* fHSSyields   [gNCHANNELS][gNSYST];
+  TH1F* fHWeightYield[gNCHANNELS][gNWEIGHT];
   TH1F* fHTopPtWeight;
   TH1F* fHpdfWeightSum;
   TH1F* fHpdfWeight;

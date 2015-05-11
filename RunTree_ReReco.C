@@ -168,28 +168,35 @@ void RunTree_ReReco(TString  sampleName    = "TTbar_Madgraph",
     TString asample = Form("Tree_T2tt_150to250LSP1to100_LeptonFilter_*");
     cout << "   + Looking for " << asample << " trees..." << endl;
     gPAFOptions->AddDataFiles(dm->GetRealDataFiles("MC_Summer12_53X/Legacy/",asample));
-  }
-  else {   // Deal with MC samples
+  } else {   // Deal with MC samples
     dm->LoadDataset(sampleName);
-
+  
     gPAFOptions->AddDataFiles(dm->GetFiles());
     
-    G_Event_Weight = dm->GetCrossSection() / dm->GetEventsInTheSample();
-    G_IsData = false;
+    double Neff=0.;
+    if      (sampleName == "TTJets_aMCatNLO_FxFx")           Neff = 4041318471.56682; // sum of weights (from cell 127S)
+    else if (sampleName == "TTJets_aMCatNLO_FxFx_ScaleUp")   Neff = 4100331707.72262; //       "        (from cell 128S)
+    else if (sampleName == "TTJets_aMCatNLO_FxFx_ScaleDown") Neff = 4114461089.82751; //       "        (from cell 129S)
+    else                                                     Neff = dm->GetEventsInTheSample();
     
+    G_Event_Weight = dm->GetCrossSection() / Neff;
+    G_IsData = false;
+  
     cout << endl;
     cout << "      x-section = " << dm->GetCrossSection()      << endl;
     cout << "        nevents = " << dm->GetEventsInTheSample() << endl;
+    cout << "     neventsEff = " << Neff                       << endl;
     cout << " base file name = " << dm->GetBaseFileName()      << endl;
     cout << "         weight = " << G_Event_Weight             << endl;
     cout << endl;
+ 
   }
-    
+
   // Output file name
   //----------------------------------------------------------------------------
   Bool_t G_Use_CSVM = true;
 
-  TString outputDir = "/mnt_pool/fanae105/user/palencia/TOP/TopTrees/";
+  TString outputDir = "./TopTrees/";
 
   if (host.Contains("ifca.es"))
     {
@@ -238,7 +245,10 @@ void RunTree_ReReco(TString  sampleName    = "TTbar_Madgraph",
     else
       gSystem->AddIncludePath("-D__ISSTOP");
   }
-  if (sampleName == "TTbar_MCatNLO"){
+  if (sampleName == "TTbar_PowhegV2_hdampWeights"    || 
+      sampleName == "TTJets_aMCatNLO_FxFx"           || 
+      sampleName == "TTJets_aMCatNLO_FxFx_ScaleDown" ||
+      sampleName == "TTJets_aMCatNLO_FxFx_ScaleUp"){
     //cout << "this is a MC@NLO sample!!! " << endl;
     if(gPAFOptions->GetPAFMode() != kSequential)  
       proof->Exec("gSystem->AddIncludePath(\"-D__ISMCNLO\");");

@@ -52,6 +52,9 @@ root -l -b -q 'RunTree_ReReco.C("TTJetsFullLeptMGTuneP11TeV",  30)'
 ##root -l -b -q 'RunTree_ReReco.C("TTLept_mcatnlo_noCorr_mass175",   30, true)'
 ##root -l -b -q 'RunTree_ReReco.C("TTLept_mcatnlo_noCorr_scaledown", 30, true)'
 ##root -l -b -q 'RunTree_ReReco.C("TTLept_mcatnlo_noCorr_scaleup",   30, true)'
+##root -l -b -q 'RunTree_ReReco.C("TTJets_aMCatNLO_FxFx"          ,  10, true)'
+##root -l -b -q 'RunTree_ReReco.C("TTJets_aMCatNLO_FxFx_ScaleDown",  10, true)'
+##root -l -b -q 'RunTree_ReReco.C("TTJets_aMCatNLO_FxFx_ScaleUp"  ,  10, true)'
 
 ## Backgrounds
 resetpaf -a

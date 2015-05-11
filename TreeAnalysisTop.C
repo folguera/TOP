@@ -121,6 +121,12 @@ void TreeAnalysisTop::InitialiseYieldsHistos(){
   }
   
   for (size_t chan=0; chan<gNCHANNELS; chan++){
+    for (int wei = 0; wei < gNWEIGHT; ++wei){
+       fHWeightYield[chan][wei] = CreateH1F("H_Yields_Wei_"+gChanLabel[chan]+"_"+WeiName[wei],"",iNCUTS,-0.5,iNCUTS-0.5);
+    }
+  }
+  
+  for (size_t chan=0; chan<gNCHANNELS; chan++){
     if (!gDoSF && chan==Muon) continue;
     if (!gDoSF && chan==Elec) continue;
     if (!gDoDF && chan==ElMu) continue;
@@ -1077,10 +1083,25 @@ void TreeAnalysisTop::FillKinematicHistos(gChannel chan, iCut cut){
       fHChi0StopMass[chan][cut] ->Fill(T_Gen_StopMass->at(0), T_Gen_Chi0Mass->at(0), EventWeight);
   }
 #endif
+
 #ifdef DEBUG
   cout << " DONE!" << endl;
 #endif
+
+#ifdef __ISMCNLO
+  fHWeightYield[chan][0]->Fill(cut, EventWeight*T_Event_weight/T_Event_weight);
+  fHWeightYield[chan][1]->Fill(cut, EventWeight*T_Event_weightMuR1muF2/T_Event_weight);
+  fHWeightYield[chan][2]->Fill(cut, EventWeight*T_Event_weightMuR1muF05/T_Event_weight);
+  fHWeightYield[chan][3]->Fill(cut, EventWeight*T_Event_weightMuR2muF1/T_Event_weight);
+  fHWeightYield[chan][4]->Fill(cut, EventWeight*T_Event_weightMuR2muF2/T_Event_weight);
+  fHWeightYield[chan][5]->Fill(cut, EventWeight*T_Event_weightMuR2muF05/T_Event_weight);
+  fHWeightYield[chan][6]->Fill(cut, EventWeight*T_Event_weightMuR05muF1/T_Event_weight);
+  fHWeightYield[chan][7]->Fill(cut, EventWeight*T_Event_weightMuR05muF2/T_Event_weight);
+  fHWeightYield[chan][8]->Fill(cut, EventWeight*T_Event_weightMuR05muF05/T_Event_weight);
+#endif
+
 }
+
 void TreeAnalysisTop::FillYieldsHistograms(gChannel chan, iCut cut, gSystFlag sys){
 #ifdef DEBUG
   cout << "FillYieldsHistograms("<<chan<<","<<cut<<","<<sys<<")...";
@@ -1173,9 +1194,9 @@ void TreeAnalysisTop::FillYields(gSystFlag sys){
     if(gSampleName == "T2tt_150to250LSP1to100_LeptonFilter")
       EventWeight = EventWeight * T_Gen_polWeights->at(10);
 #endif
+
 #ifdef __ISMCNLO
-    // 0.115 = Fraction events with negative weight
-    EventWeight = EventWeight * T_Event_weight /(abs(T_Event_weight)*(1.-2.*0.115)); 
+    EventWeight = EventWeight * T_Event_weight; 
 #endif
 
     if (PassesMllVeto() && PassesMuonEta2p1(ElMu) && Passes3rdLeptonVeto()){
@@ -1230,9 +1251,9 @@ void TreeAnalysisTop::FillYields(gSystFlag sys){
     if(gSampleName == "T2tt_150to250LSP1to100_LeptonFilter")
       EventWeight = EventWeight * T_Gen_polWeights->at(10);
 #endif
+
 #ifdef __ISMCNLO
-    // 0.115 = Fraction events with negative weight
-    EventWeight = EventWeight * T_Event_weight /(abs(T_Event_weight)*(1.-2.*0.115)); 
+    EventWeight = EventWeight * T_Event_weight; 
 #endif
     if (PassesMllVeto() && PassesMuonEta2p1(Muon) && Passes3rdLeptonVeto()){
       FillYieldsHistograms(Muon,iDilepton, sys);
@@ -1272,9 +1293,9 @@ void TreeAnalysisTop::FillYields(gSystFlag sys){
     if(gSampleName == "T2tt_150to250LSP1to100_LeptonFilter")
       EventWeight = EventWeight * T_Gen_polWeights->at(10);
 #endif
+
 #ifdef __ISMCNLO
-    // 0.115 = Fraction events with negative weight
-    EventWeight = EventWeight * T_Event_weight /(abs(T_Event_weight)*(1.-2.*0.115)); 
+    EventWeight = EventWeight * T_Event_weight; 
 #endif
     if (PassesMllVeto() && PassesMuonEta2p1(Elec) && Passes3rdLeptonVeto()){
       FillYieldsHistograms(Elec,iDilepton, sys);
